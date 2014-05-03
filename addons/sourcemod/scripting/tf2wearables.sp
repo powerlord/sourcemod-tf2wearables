@@ -77,7 +77,7 @@ public OnPluginStart()
 {
 	CreateConVar("tf2wearables_version", VERSION, "Version of TF2 Wearables API", FCVAR_PLUGIN|FCVAR_NOTIFY|FCVAR_DONTRECORD|FCVAR_SPONLY);
 	
-	hGameConf = LoadGameConfigFile("tf2wearables");
+	hGameConf = LoadGameConfigFile("tf2.wearables");
 	
 	StartPrepSDKCall(SDKCall_Player);
 	PrepSDKCall_SetFromConf(hGameConf, SDKConf_Virtual, "CTFPlayer::EquipWearable");
@@ -163,7 +163,7 @@ public Native_GetLoadoutSlot(Handle:plugin, numParams)
 	if (client < 1 || client > MaxClients || !IsClientInGame(client))
 	{
 		ThrowNativeError(SP_ERROR_NATIVE, "Client %d is invalid", client);
-		return;
+		return -1;
 	}
 	
 	new TF2LoadoutSlot:slot = GetNativeCell(2);
