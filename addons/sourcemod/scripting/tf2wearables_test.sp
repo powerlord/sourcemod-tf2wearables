@@ -1,10 +1,10 @@
 /**
  * vim: set ts=4 :
  * =============================================================================
- * Name
- * Description
+ * TF2 Wearables Test
+ * Test to get item information from loadout slots
  *
- * Name (C)2014 Powerlord (Ross Bemrose).  All rights reserved.
+ * TF2 Wearables Test (C)2014 Powerlord (Ross Bemrose).  All rights reserved.
  * =============================================================================
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -132,34 +132,3 @@ ProcessItems(client, target)
 		}
 	}
 }
-
-/*
-// Natives
-
-// native FunctionWithArg(const String:param1[]);
-public Native_FunctionWithArg(Handle:plugin, numParams)
-{
-	// for const Strings
-	new size;
-	GetNativeStringLength(1, size);
-	decl String:param1[size+1];
-	GetNativeString(1, param1, size+1);
-}
-
-// native bool:FunctionWithoutArg();
-public Native_FunctionWithoutArg(Handle:plugin, numParams)
-{
-	return true;
-}
-
-// native RegisterCallback(ACallback);
-public Native_RegisterCallback(Handle:plugin, numParams)
-{
-}
-	
-// native UnregisterCallback(ACallback);
-public Native_UnregisterCallback(Handle:plugin, numParams)
-{
-}
-*/
-
