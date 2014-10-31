@@ -6,16 +6,16 @@
 		{
 			"CTFPlayer::EquipWearable"
 			{
-				"windows"	"425"
-				"linux"		"426"
-				"mac"		"426"
+				"windows"	"426"
+				"linux"		"427"
+				"mac"		"427"
 			}
 
 			"CTFPlayer::RemoveWearable"
 			{
-				"windows"	"426"
-				"linux"		"427"
-				"mac"		"427"
+				"windows"	"427"
+				"linux"		"428"
+				"mac"		"428"
 			}
 
 			"CBaseEntity::IsWearable"
