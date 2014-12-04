@@ -38,6 +38,7 @@
 #define _tf2wearables_included_
 
 #include <sourcemod>
+#include <tf2_stocks>
 
 // This order is taken from g_szLoadoutStringsForDisplay in server_srv.so
 // Frankly, it makes a lot more sense than the version that contains aGrenade
@@ -47,7 +48,8 @@ enum TF2LoadoutSlot
 	TF2LoadoutSlot_Primary,
 	TF2LoadoutSlot_Secondary,
 	TF2LoadoutSlot_Melee,
-	TF2LoadoutSlot_Unknown1,
+	TF2LoadoutSlot_Utility,
+	TF2LoadoutSlot_Unknown1 = 3,
 	TF2LoadoutSlot_Building,
 	TF2LoadoutSlot_Unknown2,
 	TF2LoadoutSlot_PDA2,
@@ -55,6 +57,14 @@ enum TF2LoadoutSlot
 	TF2LoadoutSlot_Misc2,
 	TF2LoadoutSlot_Action,
 	TF2LoadoutSlot_Misc3,
+	TF2LoadoutSlot_Taunt1,
+	TF2LoadoutSlot_Taunt2,
+	TF2LoadoutSlot_Taunt3,
+	TF2LoadoutSlot_Taunt4,
+	TF2LoadoutSlot_Taunt5,
+	TF2LoadoutSlot_Taunt6,
+	TF2LoadoutSlot_Taunt7,
+	TF2LoadoutSlot_Taunt8,
 }
 
 /**
@@ -70,14 +80,17 @@ enum TF2LoadoutSlot
 native TF2_EquipPlayerWearable(client, wearable);
 
 /**
- * Remove a wearable item from a player
- * The wearable equivalent of RemovePlayerItem.
+ * stock that replaces old version of this function, which is now included
+ * in the TF2 extension
  *
  * @param client	Client who should remove this
  * @param wearable	The entity index of the wearable, use 
  * @return			True if it was equipped, false otherwise
  */
-native TF2_RemovePlayerWearable(client, wearable);
+stock TF2_RemovePlayerWearable(client, wearable)
+{
+	TF2_RemoveWearable(client, wearable);
+}
 
 /**
  * Is an entity a wearable?
@@ -98,61 +111,83 @@ native bool:TF2_IsWearable(entity);
 native TF2_GetPlayerLoadoutSlot(client, TF2LoadoutSlot:slot);
 
 /**
- * Removes a weapon from a client's weapon slot
- *
- * @param client		Player's index.
- * @param slot			Slot index (0-5)
- * @noreturn
- * @error				Invalid client, invalid slot or lack of mod support
- */
-stock TF2_RemoveWeaponSlotFix(client, slot)
-{
-	new weaponIndex;
-	while ((weaponIndex = GetPlayerWeaponSlot(client, slot)) != -1)
-	{
-		new wearable = GetEntPropEnt(weaponIndex, Prop_Send, "m_hExtraWearable");
-		if (wearable > MaxClients)
-		{
-			TF2_RemovePlayerWearable(client, wearable);
-			AcceptEntityInput(wearable, "Kill");
-		}
-		
-		RemovePlayerItem(client, weaponIndex);
-		AcceptEntityInput(weaponIndex, "Kill");
-	}
-}
-
-/**
- * Removes all weapons from a client
- *
- * @param client		Player's index.
- * @noreturn
- */
-stock TF2_RemoveAllWeaponsFix(client)
-{
-	for (new i = 0; i <= 5; i++)
-	{
-		TF2_RemoveWeaponSlotFix(client, i);
-	}
-}
-
-/**
- * Removes all non-weapon Wearables from a client
+ * Removes all non-Taunt wearables from a client
  *
  * @param client		Player's index.
  * @noreturn
  */
 stock TF2_RemoveAllWearables(client)
 {
-	for (new i = TF2LoadoutSlot_Misc1; i <= TF2LoadoutSlot_Misc3; i++)
+	for (new TF2LoadoutSlot:i = TF2LoadoutSlot_Misc1; i <= TF2LoadoutSlot_Misc3; i++)
 	{
-		new wearable = TF2_GetItemForLoadoutSlot(client, i);
-		if (IsValidEntity(wearable))
+		new item = TF2_GetItemForLoadoutSlot(client, i);
+		if (IsValidEntity(item))
 		{
-			TF2_RemovePlayerWearable(client, wearable);
-			AcceptEntityInput(wearable, "Kill");
+			// IsWearable check is necessary because of spellbooks, which aren't wearables but appear in the Action slot
+			if (TF2_IsWearable(item))
+			{
+				TF2_RemoveWearable(client, item);
+			}
+			else
+			{
+				TF2_RemoveWeapon(client, item);
+			}
+			
+			AcceptEntityInput(item, "Kill");
 		}
 	}
+}
+
+/**
+ * Removes all Taunt wearables from a client
+ *
+ * @param client		Player's index.
+ * @noreturn
+ */
+stock TF2_RemoveAllTaunts(client)
+{
+	for (new TF2LoadoutSlot:i = TF2LoadoutSlot_Taunt1; i <= TF2LoadoutSlot_Taunt8; i++)
+	{
+		new item = TF2_GetItemForLoadoutSlot(client, i);
+		if (IsValidEntity(item))
+		{
+			TF2_RemovePlayerWearable(client, item);
+			AcceptEntityInput(item, "Kill");
+		}
+	}
+	
+}
+
+/**
+ * Removes a weapon from a client
+ * Note: You still need to kill the entity afterwards
+ *
+ * @param client		Player's index.
+ * @param weaponIndex	entity index of a weapon
+ * @noreturn
+ */
+stock TF2_RemoveWeapon(client, weaponIndex)
+{
+	if (!IsValidEntity(weaponIndex))
+	{
+		return;
+	}
+	
+	// bug #6206
+	// papering over a valve bug where a weapon's extra wearables aren't properly removed from the weapon's owner
+	new extraWearable = GetEntPropEnt(weaponIndex, Prop_Send, "m_hExtraWearable");
+	if (extraWearable != -1)
+	{
+		TF2_RemoveWearable(client, extraWearable);
+	}
+
+	extraWearable = GetEntPropEnt(weaponIndex, Prop_Send, "m_hExtraWearableViewModel");
+	if (extraWearable != -1)
+	{
+		TF2_RemoveWearable(client, extraWearable);
+	}
+	
+	RemovePlayerItem(client, weaponIndex);
 }
 
 public SharedPlugin:__pl_tf2wearables =
