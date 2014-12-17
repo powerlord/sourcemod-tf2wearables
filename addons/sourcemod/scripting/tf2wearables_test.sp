@@ -118,7 +118,7 @@ public Action:Cmd_CheckItems(client, args)
 
 ProcessItems(client, target)
 {
-	for (new i = 0; i < _:TF2LoadoutSlot; i++)
+	for (new i = 0; i < TF2_LOADOUT_SLOT_COUNT; i++)
 	{
 		new item = TF2_GetPlayerLoadoutSlot(target, TF2LoadoutSlot:i);
 		
@@ -128,7 +128,7 @@ ProcessItems(client, target)
 			GetEntityClassname(item, classname, sizeof(classname));
 			new itemDefinitionIndex = GetEntProp(item, Prop_Send, "m_iItemDefinitionIndex");
 			
-			ReplyToCommand(client, "Item Slot %d: ent %d, class \"%s\", index %d", i, item, classname, itemDefinitionIndex);
+			ReplyToCommand(client, "%N Item Slot %d: ent %d, class \"%s\", index %d", target, i, item, classname, itemDefinitionIndex);
 		}
 	}
 }

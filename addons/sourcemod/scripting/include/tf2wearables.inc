@@ -40,6 +40,9 @@
 #include <sourcemod>
 #include <tf2_stocks>
 
+// numbered 0 to TF2_LOADOUT_SLOT_COUNT-1
+#define TF2_LOADOUT_SLOT_COUNT 19
+
 // This order is taken from g_szLoadoutStringsForDisplay in server_srv.so
 // Frankly, it makes a lot more sense than the version that contains aGrenade
 // since grenades have never existed in TF2
