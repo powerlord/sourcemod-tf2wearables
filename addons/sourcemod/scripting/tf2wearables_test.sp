@@ -83,6 +83,7 @@ public Action:Cmd_CheckItems(client, args)
 	if (args == 0)
 	{
 		ReplyToCommand(client, "Syntax: checkitems target");
+		return Plugin_Handled;
 	}
 	
 	decl String:pattern[64];
