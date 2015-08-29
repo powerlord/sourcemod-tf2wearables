@@ -123,7 +123,7 @@ stock TF2_RemoveAllWearables(client)
 {
 	for (new TF2LoadoutSlot:i = TF2LoadoutSlot_Misc1; i <= TF2LoadoutSlot_Misc3; i++)
 	{
-		new item = TF2_GetItemForLoadoutSlot(client, i);
+		new item = TF2_GetPlayerLoadoutSlot(client, i);
 		if (IsValidEntity(item))
 		{
 			// IsWearable check is necessary because of spellbooks, which aren't wearables but appear in the Action slot
@@ -151,7 +151,7 @@ stock TF2_RemoveAllTaunts(client)
 {
 	for (new TF2LoadoutSlot:i = TF2LoadoutSlot_Taunt1; i <= TF2LoadoutSlot_Taunt8; i++)
 	{
-		new item = TF2_GetItemForLoadoutSlot(client, i);
+		new item = TF2_GetPlayerLoadoutSlot(client, i);
 		if (IsValidEntity(item))
 		{
 			TF2_RemovePlayerWearable(client, item);
