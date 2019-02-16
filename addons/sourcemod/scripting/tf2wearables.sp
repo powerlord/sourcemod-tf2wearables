@@ -97,6 +97,7 @@ public OnPluginStart()
 	StartPrepSDKCall(SDKCall_Player);
 	PrepSDKCall_SetFromConf(hGameConf, SDKConf_Signature, "CTFPlayer::GetEntityForLoadoutSlot");
 	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+	PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
 	PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 	hGetEntFromSlot = EndPrepSDKCall();
 }
@@ -167,6 +168,7 @@ public Native_GetLoadoutSlot(Handle:plugin, numParams)
 	}
 	
 	new TF2LoadoutSlot:slot = GetNativeCell(2);
+	new check_wearable = numParams < 3? true : GetNativeCell(3);
 	
-	return SDKCall(hGetEntFromSlot, client, slot);
+	return SDKCall(hGetEntFromSlot, client, slot, check_wearable);
 }
