@@ -109,9 +109,10 @@ native bool:TF2_IsWearable(entity);
  * 
  * @param client		Client whose item we want
  * @param slot		The slot whose item we want
- * @return entity		Entity index or -1 if no item found
+ * @param include_wearable_weapons		False if wearable items in weapon slots should be ignored
+ * @return entity		Entity index; -1 if no item found or if slot contains wearable and include_wearable_weapons is false
  */
-native TF2_GetPlayerLoadoutSlot(client, TF2LoadoutSlot:slot);
+native TF2_GetPlayerLoadoutSlot(client, TF2LoadoutSlot:slot, bool:include_wearable_weapons = true);
 
 /**
  * Removes all non-Taunt wearables from a client
